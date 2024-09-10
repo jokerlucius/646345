@@ -1,0 +1,79 @@
+import random
+import math
+
+# Function to calculate distance between player and treasure
+def calculate_distance(player, treasure):
+    return math.sqrt((player[0] - treasure[0]) ** 2 + (player[1] - treasure[1]) ** 2)
+
+# Initialize grid size and maximum moves
+grid_size = 5  # You can change this value
+max_moves = 10  # You can adjust the number of moves as well
+
+# Random starting positions for player and treasure
+player_position = [random.randint(0, grid_size - 1), random.randint(0, grid_size - 1)]
+treasure_position = [random.randint(0, grid_size - 1), random.randint(0, grid_size - 1)]
+
+# Calculate initial distance
+initial_distance = calculate_distance(player_position, treasure_position)
+
+print(f"Welcome to the Treasure Hunt!")
+print(f"You are on a {grid_size}x{grid_size} grid.")
+print(f"Your starting position is {player_position}. You have {max_moves} moves to find the treasure!")
+
+# Game loop
+moves_made = 0
+while moves_made < max_moves:
+    # Get the player's move input
+    move = input("Enter move (N for North, S for South, E for East, W for West): ").upper()
+
+    # Update player position based on the move
+    if move == 'N':
+        if player_position[1] < grid_size - 1:
+            player_position[1] += 1
+        else:
+            print("Move not allowed, you're at the northern edge of the map.")
+            continue
+    elif move == 'S':
+        if player_position[1] > 0:
+            player_position[1] -= 1
+        else:
+            print("Move not allowed, you're at the southern edge of the map.")
+            continue
+    elif move == 'E':
+        if player_position[0] < grid_size - 1:
+            player_position[0] += 1
+        else:
+            print("Move not allowed, you're at the eastern edge of the map.")
+            continue
+    elif move == 'W':
+        if player_position[0] > 0:
+            player_position[0] -= 1
+        else:
+            print("Move not allowed, you're at the western edge of the map.")
+            continue
+    else:
+        print("Invalid move. Please enter N, S, E, or W.")
+        continue
+
+    moves_made += 1
+
+    # Recalculate distance after move
+    new_distance = calculate_distance(player_position, treasure_position)
+
+    # Check if the player has found the treasure
+    if player_position == treasure_position:
+        print(f"Congratulations! You found the treasure at {treasure_position} in {moves_made} moves!")
+        break
+    else:
+        # Compare the distances and give feedback
+        if new_distance < initial_distance:
+            print("You're getting closer!")
+        else:
+            print("You're getting farther away!")
+        
+        initial_distance = new_distance
+        print(f"Current position: {player_position}. Moves left: {max_moves - moves_made}")
+
+# If all moves are used up
+if moves_made == max_moves and player_position != treasure_position:
+    print(f"Game over! You've run out of moves. The treasure was at {treasure_position}.")
